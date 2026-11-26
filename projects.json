@@ -1,0 +1,57 @@
+[
+  {
+    "title": "ProjectDnD — RPG Engine & AI Storyteller API",
+    "year": "2026",
+    "displayType": "ARCHITECTURE_DIAGRAM",
+    "description": "Architected a secured, production-ready RESTful backend in Spring Boot 3 for a fantasy RPG engine featuring D20 mechanics, spellcasting, rune channeling, and dynamic state management.",
+    "tech": ["Java", "Spring Boot 3", "Spring Security (JWT)", "Spring Data JPA", "PostgreSQL", "Gemini AI"],
+    "githubUrl": "https://github.com/doronmerioz12-design/projectdnd",
+    "payload": {
+      "imagePath": "assets/projectdnd-arch.png",
+      "caption": "Layered Spring Boot 3 Architecture: JWT Auth Filter -> REST Controllers -> Factory Rune Engine -> PostgreSQL"
+    }
+  },
+  {
+    "title": "Ultra — Bletchley Park Intelligence Simulation",
+    "year": "2025",
+    "displayType": "ARCHITECTURE_DIAGRAM",
+    "description": "End-to-end WWII intelligence pipeline encrypting/decrypting messages and integrating Google Gemini AI for semantic classification. Built with Strategy, Observer, and Factory patterns plus PostgreSQL RBAC isolation.",
+    "tech": ["Java", "PostgreSQL (RBAC)", "Gemini AI", "Strategy & Observer Patterns"],
+    "githubUrl": "https://github.com/doronmerioz12-design",
+    "payload": {
+      "imagePath": "assets/ultra-arch.png",
+      "caption": "Cipher Decryption Pipeline & Role-Based Access Control (RBAC) Isolated Routing Tables"
+    }
+  },
+  {
+    "title": "Semantic Universe Classifier (Sorting Hat)",
+    "year": "2025",
+    "displayType": "PERFORMANCE_GRAPH",
+    "description": "Full-stack AI application categorizing historical figures into fictional universes via a high-performance FastAPI backend, using Sentence-Transformers and Gemini AI with local embedding fallbacks and caching.",
+    "tech": ["Python", "FastAPI", "Gemini AI", "Sentence-Transformers", "MongoDB"],
+    "githubUrl": "https://github.com/doronmerioz12-design",
+    "payload": {
+      "metricTitle": "API Latency Optimization (Caching & Local Fallback)",
+      "bars": [
+        { "label": "Cold LLM Request (Uncached)", "valueText": "1,450 ms", "percent": 100 },
+        { "label": "Local Embedding Fallback", "valueText": "180 ms", "percent": 18 },
+        { "label": "Cached Semantic Lookup", "valueText": "25 ms", "percent": 4 }
+      ]
+    }
+  },
+  {
+    "title": "Automated Student Job Search Agent",
+    "year": "2026",
+    "displayType": "TEXT_HIGHLIGHTS",
+    "description": "Concurrent Python scraping and filtering pipeline automated via GitHub Actions to aggregate Israeli student and internship software roles and generate styled daily Excel reports.",
+    "tech": ["Python", "ThreadPoolExecutor", "GitHub Actions (CI/CD)", "Automation"],
+    "githubUrl": "https://github.com/doronmerioz12-design/job-search-agent",
+    "payload": {
+      "highlights": [
+        "Concurrent multi-source scraping using ThreadPoolExecutor for fast daily execution.",
+        "Heuristic & keyword filtering engine isolating student/intern roles from senior/junior listings.",
+        "Automated CI/CD scheduling via GitHub Actions with local Windows startup integration."
+      ]
+    }
+  }
+]

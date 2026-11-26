@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Doron Merioz | Backend & Software Engineering Portfolio</title>
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<header class="hero">
+		<div class="container">
+			<h1>Doron Merioz</h1>
+			<p class="subtitle">3rd Year Computer Science Student @ The Hebrew University of Jerusalem</p>
+			<p class="tagline">Specializing in Backend Architecture, Concurrent Systems & AI Integration</p>
+			<div class="links">
+				<a href="https://github.com/doronmerioz12-design" target="_blank" class="btn">GitHub</a>
+				<a href="mailto:doronmerioz12@gmail.com" class="btn btn-outline">Contact Me</a>
+			</div>
+		</div>
+	</header>
+	
+	<main class="container">
+		<section id="about" class="card-section">
+			<h2>About Me</h2>
+			<p>
+				I am a third-year B.Sc. Computer Science student at the Hebrew University of Jerusalem (graduating 2028),
+				bridging strong theoretical foundations in algorithms (91) and discrete mathematics (89) with hands-on
+				software engineering.
+			</p>
+			<p>
+				Passionate about building modular, scalable backend systems using <strong>Java (Spring Boot)</strong>,
+				<strong>Python (FastAPI)</strong>, and <strong>PostgreSQL</strong>. I enjoy applying clean OOP design
+				patterns (Strategy, Observer, Factory), designing secure database schemas, and integrating LLMs into
+				practical engineering pipelines.
+			</p>
+		</section>
+		
+		<section id="projects">
+			<h2>Featured Engineering Projects</h2>
+			<p class="section-note">
+				* Rendered dynamically via a modular <code>DisplayStrategy</code> pattern separating data payloads from UI presentation.
+			</p>
+			<!-- הפרויקטים ירונדרו לכאן דינמית מתוך projects.json -->
+			<div id="projects-container" class="projects-grid"></div>
+		</section>
+		
+		<section id="skills" class="card-section">
+			<h2>Technical Stack & Academic Core</h2>
+			<div class="skills-grid">
+				<div>
+					<h3>Backend & Databases</h3>
+					<p>Java, Spring Boot 3, Spring Security, Spring Data JPA, Python, FastAPI, PostgreSQL, MongoDB, REST APIs</p>
+				</div>
+				<div>
+					<h3>Systems & Testing</h3>
+					<p>C/C++, Multi-threading, OOP & Design Patterns, JUnit 5, Mockito, MockMvc, Git, Linux/WSL</p>
+				</div>
+				<div>
+					<h3>AI & Core Coursework</h3>
+					<p>Gemini AI, NLP & Semantic Search, Algorithms (91), Discrete Math (89), OOP (82), Operating Systems</p>
+				</div>
+			</div>
+		</section>
+	</main>
+	
+	<footer>
+		<div class="container">
+			<p>Built from scratch by Doron Merioz • Hosted on GitHub Pages</p>
+			<p class="disclaimer">Disclaimer: Referenced fictional universes in educational projects belong to their respective owners.</p>
+		</div>
+	</footer>
+	
+	<script src="app.js"></script>
+</body>
+</html>
