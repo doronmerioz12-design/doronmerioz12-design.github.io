@@ -17,7 +17,7 @@
     "displayType": "ARCHITECTURE_DIAGRAM",
     "description": "End-to-end WWII intelligence pipeline encrypting/decrypting messages and integrating Google Gemini AI for semantic classification. Built with Strategy, Observer, and Factory patterns plus PostgreSQL RBAC isolation.",
     "tech": ["Java", "PostgreSQL (RBAC)", "Gemini AI", "Strategy & Observer Patterns"],
-    "githubUrl": "https://github.com/doronmerioz12-design",
+    "githubUrl": "https://github.com/doronmerioz12-design/Ultra",
     "payload": {
       "imagePath": "assets/ultra-arch.png",
       "caption": "Cipher Decryption Pipeline & Role-Based Access Control (RBAC) Isolated Routing Tables"
@@ -29,28 +29,13 @@
     "displayType": "PERFORMANCE_GRAPH",
     "description": "Full-stack AI application categorizing historical figures into fictional universes via a high-performance FastAPI backend, using Sentence-Transformers and Gemini AI with local embedding fallbacks and caching.",
     "tech": ["Python", "FastAPI", "Gemini AI", "Sentence-Transformers", "MongoDB"],
-    "githubUrl": "https://github.com/doronmerioz12-design",
+    "githubUrl": "https://github.com/doronmerioz12-design/Sorting-Hat",
     "payload": {
       "metricTitle": "API Latency Optimization (Caching & Local Fallback)",
       "bars": [
         { "label": "Cold LLM Request (Uncached)", "valueText": "1,450 ms", "percent": 100 },
         { "label": "Local Embedding Fallback", "valueText": "180 ms", "percent": 18 },
         { "label": "Cached Semantic Lookup", "valueText": "25 ms", "percent": 4 }
-      ]
-    }
-  },
-  {
-    "title": "Automated Student Job Search Agent",
-    "year": "2026",
-    "displayType": "TEXT_HIGHLIGHTS",
-    "description": "Concurrent Python scraping and filtering pipeline automated via GitHub Actions to aggregate Israeli student and internship software roles and generate styled daily Excel reports.",
-    "tech": ["Python", "ThreadPoolExecutor", "GitHub Actions (CI/CD)", "Automation"],
-    "githubUrl": "https://github.com/doronmerioz12-design/job-search-agent",
-    "payload": {
-      "highlights": [
-        "Concurrent multi-source scraping using ThreadPoolExecutor for fast daily execution.",
-        "Heuristic & keyword filtering engine isolating student/intern roles from senior/junior listings.",
-        "Automated CI/CD scheduling via GitHub Actions with local Windows startup integration."
       ]
     }
   }
