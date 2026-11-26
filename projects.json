@@ -15,12 +15,28 @@
     "title": "Ultra — Bletchley Park Intelligence Simulation",
     "year": "2025",
     "displayType": "ARCHITECTURE_DIAGRAM",
-    "description": "End-to-end WWII intelligence pipeline encrypting/decrypting messages and integrating Google Gemini AI for semantic classification. Built with Strategy, Observer, and Factory patterns plus PostgreSQL RBAC isolation.",
-    "tech": ["Java", "PostgreSQL (RBAC)", "Gemini AI", "Strategy & Observer Patterns"],
+    "description": "End-to-end WWII intelligence pipeline decrypting intercepted signals without pre-shared keys and integrating Google Gemini AI for semantic classification. Built with Strategy, Observer, and Factory patterns plus PostgreSQL RBAC isolation.",
+    "tech": ["Java 17", "PostgreSQL (RBAC)", "Gemini 2.5 Flash", "JUnit 5 & Mockito", "Strategy & Observer"],
     "githubUrl": "https://github.com/doronmerioz12-design/Ultra",
     "payload": {
       "imagePath": "assets/ultra-arch.png",
       "caption": "Cipher Decryption Pipeline & Role-Based Access Control (RBAC) Isolated Routing Tables"
+    },
+    "deepDive": {
+      "intuitiveOverview": "Inspired by the Allied intelligence operations at Bletchley Park during World War II, ULTRA simulates the full lifecycle of an intercepted enemy radio transmission. Raw encrypted signals enter a persistent queue, get cracked automatically without pre-shared keys using classical cryptanalysis, are analyzed by an AI triage engine to determine urgency and target command, and are dispatched strictly on a 'Need-to-Know' basis to isolated military branch databases.",
+      "executionProof": {
+        "title": "Verified End-to-End Pipeline & Test Suite Execution",
+        "caption": "Live execution demonstrating automated cipher cracking, AI branch classification, isolated PostgreSQL routing, and 9/9 passing JUnit 5 & Mockito unit/integration tests.",
+        "imagePath": "assets/ultra-run.png"
+      },
+      "problem": "How to ingest untrusted, encrypted radio traffic, break ciphers blindly at runtime, classify unstructured intelligence using an external LLM prone to rate limits, and enforce strict compartmented access so no military branch can query another branch's records.",
+      "architecture": [
+        "Keyless Cryptanalysis Engine (Strategy & Factory): Dynamically resolves Caesar and blind Vigenere crackers (powered by Kasiski Examination and frequency analysis) with fail-fast Enum validation.",
+        "Fault-Tolerant AI Triage (Gemini 2.5 Flash): Parses structured routing (NAVY, RAF, ARMY, PM_OFFICE, SHAEF) and urgency levels via Java HttpClient, featuring exponential backoff on HTTP 429 and safe fallback (ALL | ROUTINE).",
+        "Defense-in-Depth Isolation (Observer + PostgreSQL RBAC): Decouples alert distribution via Observer pattern backed by 6 distinct PostgreSQL roles with least-privilege table grants.",
+        "Isolated Testing Suite (JUnit 5 & Mockito): 9 deterministic tests validating cryptanalysis accuracy, fail-fast factory edge cases, and mocked LLM Need-to-Know routing without external DB/API dependencies."
+      ],
+      "takeaways": "Separating statistical cryptanalysis, external AI network calls, and database RBAC enforcement behind clean interfaces made the system resilient to API failures and straightforward to verify with mocked unit tests."
     }
   },
   {
