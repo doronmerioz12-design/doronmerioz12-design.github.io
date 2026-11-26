@@ -40,7 +40,6 @@
 			<p class="section-note">
 				* Rendered dynamically via a modular <code>DisplayStrategy</code> pattern separating data payloads from UI presentation.
 			</p>
-			<!-- הפרויקטים ירונדרו לכאן דינמית מתוך projects.json -->
 			<div id="projects-container" class="projects-grid"></div>
 		</section>
 		
@@ -62,6 +61,14 @@
 			</div>
 		</section>
 	</main>
+	
+	<!-- חלונית פירוט מעמיק שנפתחת באותו עמוד (Modal) -->
+	<div id="project-modal" class="modal hidden" onclick="closeModalOnBackdrop(event)">
+		<div class="modal-content">
+			<button class="modal-close" onclick="closeProjectModal()">✕ Close</button>
+			<div id="modal-body"></div>
+		</div>
+	</div>
 	
 	<footer>
 		<div class="container">
