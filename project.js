@@ -1,5 +1,7 @@
 async function loadProjectDetail() {
     const container = document.getElementById('project-detail-container');
+    if (!container) return;
+
     const params = new URLSearchParams(window.location.search);
     const projectId = params.get('id');
     const projectTitle = params.get('title');
@@ -16,17 +18,27 @@ async function loadProjectDetail() {
 
     try {
         const response = await fetch('projects.json?v=' + new Date().getTime());
-        const projects = await response.json();
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+
+        const rawData = await response.json();
+        const projects = Array.isArray(rawData)
+            ? rawData
+            : Array.isArray(rawData?.projects)
+                ? rawData.projects
+                : [];
+
         const project = projects.find(p =>
             (projectId && p.id === projectId) ||
             (projectTitle && p.title === projectTitle)
         );
 
-        if (!project || !project.deepDive) {
+        if (!project) {
             container.innerHTML = `
                 <div class="card-section">
-                    <h2>Deep Dive Not Available Yet</h2>
-                    <p>Full documentation for this project is coming soon.</p>
+                    <h2>Project Not Found</h2>
+                    <p>Could not find the requested project.</p>
                     <a href="index.html" class="btn">Return Home</a>
                 </div>
             `;
@@ -34,14 +46,38 @@ async function loadProjectDetail() {
         }
 
         document.title = `${project.title} | Deep Dive`;
-        const dd = project.deepDive;
-        const techBadges = project.tech.map(t => `<span class="tech-tag">${t}</span>`).join('');
+        const dd = project.deepDive || {};
+        const arch = project.architecture || {};
 
-        const componentsHtml = (dd.components || []).map(comp => `
+        const techList = Array.isArray(project.tech)
+            ? project.tech
+            : Array.isArray(project.techStack)
+                ? project.techStack
+                : [];
+        const techBadges = techList.map(t => `<span class="tech-tag">${t}</span>`).join('');
+
+        const description = project.description || project.subtitle || '';
+        const badgeLabel = project.year
+            ? `${project.year} • System Architecture Deep Dive`
+            : `${project.status || 'Project'} • System Architecture Deep Dive`;
+
+        const githubActionHtml = project.githubUrl
+            ? `<div class="card-actions" style="margin-top: 20px;">
+                   <a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" class="btn">View Source Code on GitHub ↗</a>
+               </div>`
+            : '';
+
+        const rawComponents = Array.isArray(dd.components) && dd.components.length
+            ? dd.components
+            : Array.isArray(arch.components)
+                ? arch.components
+                : [];
+
+        const componentsHtml = rawComponents.map(comp => `
             <div class="component-card">
                 <h4>${comp.name}</h4>
-                <span class="comp-role">${comp.role}</span>
-                <p>${comp.details}</p>
+                ${comp.role ? `<span class="comp-role">${comp.role}</span>` : ''}
+                ${comp.details ? `<p>${comp.details}</p>` : ''}
             </div>
         `).join('');
 
@@ -49,9 +85,9 @@ async function loadProjectDetail() {
             <div class="algo-card">
                 <div class="algo-header">
                     <h4>${alg.name}</h4>
-                    <span class="badge">${alg.complexity}</span>
+                    ${alg.complexity ? `<span class="badge">${alg.complexity}</span>` : ''}
                 </div>
-                <p>${alg.explanation}</p>
+                <p>${alg.explanation || ''}</p>
                 <ul>
                     ${(alg.steps || []).map(step => `<li>${step}</li>`).join('')}
                 </ul>
@@ -83,6 +119,10 @@ async function loadProjectDetail() {
                     </div>
                 </div>
 
+                ${run.routingResult ? `
+                    <p class="routing-summary"><strong>Pipeline Routing & Status:</strong> <code>${run.routingResult}</code></p>
+                ` : ''}
+
                 <div class="terminal-capture">
                     <span class="stage-label">Live Terminal Execution</span>
                     <img src="${run.screenshotPath}" alt="${run.heading}"
@@ -102,38 +142,47 @@ async function loadProjectDetail() {
             </div>
         `).join('');
 
+        const diagramPath = arch.diagramPath || project.payload?.imagePath || '';
+        const diagramCaption = arch.diagramCaption || project.payload?.caption || `${project.title} — System Architecture`;
+
+        const highlightsHtml = Array.isArray(project.highlights) && project.highlights.length
+            ? `<ul class="styled-list">${project.highlights.map(item => `<li>${item}</li>`).join('')}</ul>`
+            : '';
+
         const aiHighlightsHtml = dd.aiIntegration && Array.isArray(dd.aiIntegration.highlights)
             ? `<ul class="styled-list">${dd.aiIntegration.highlights.map(item => `<li>${item}</li>`).join('')}</ul>`
             : '';
 
         container.innerHTML = `
             <header class="project-hero">
-                <span class="badge">${project.year} • System Architecture Deep Dive</span>
+                <span class="badge">${badgeLabel}</span>
                 <h1>${project.title}</h1>
-                <p class="project-lead">${project.description}</p>
+                <p class="project-lead">${description}</p>
                 <div class="tech-tags">${techBadges}</div>
-                <div class="card-actions" style="margin-top: 20px;">
-                    <a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" class="btn">View Source Code on GitHub ↗</a>
-                </div>
+                ${githubActionHtml}
             </header>
 
-            ${dd.overview ? `
+            ${dd.overview || highlightsHtml ? `
                 <section class="card-section">
-                    <h2>1. Project Overview & Motivation</h2>
-                    <p>${dd.overview}</p>
+                    <h2>1. Project Overview & Key Highlights</h2>
+                    ${dd.overview ? `<p>${dd.overview}</p>` : ''}
+                    ${highlightsHtml}
                 </section>
             ` : ''}
 
-            ${dd.architectureSummary || pipelineHtml ? `
+            ${dd.architectureSummary || pipelineHtml || diagramPath ? `
                 <section class="card-section">
                     <h2>2. System Architecture & Flow</h2>
                     ${dd.architectureSummary ? `<p>${dd.architectureSummary}</p>` : ''}
                     ${pipelineHtml ? `<div class="arch-pipeline">${pipelineHtml}</div>` : ''}
-                    ${project.payload && project.payload.imagePath ? `
+                    ${diagramPath ? `
                         <div class="strategy-box diagram-placeholder" style="margin-top: 20px;">
-                            <strong>${project.payload.caption}</strong>
-                            <img src="${project.payload.imagePath}" alt="${project.payload.caption}"
-                                 onerror="this.style.display='none';">
+                            <strong>${diagramCaption}</strong>
+                            <img src="${diagramPath}" alt="${diagramCaption}"
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
+                            <p style="display:none; color:#38bdf8; margin-top:8px;">
+                                [Diagram missing: verify <code>${diagramPath}</code>]
+                            </p>
                         </div>
                     ` : ''}
                 </section>
