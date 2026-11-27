@@ -47,14 +47,17 @@ async function loadProjectDetail() {
 
         document.title = `${project.title} | Deep Dive`;
 
-        if (project.id === 'ultra') {
+        const isUltra = project.id === 'ultra';
+        document.body.classList.toggle('ultra-deep-dive', isUltra);
+
+        if (isUltra) {
             const bgImage = encodeURI('assets/enigma backgorund image.webp');
             document.body.style.backgroundImage = `
-                linear-gradient(rgba(10, 15, 28, 0.85), rgba(10, 15, 28, 0.92)),
+                linear-gradient(rgba(10, 15, 28, 0.52), rgba(10, 15, 28, 0.68)),
                 url("${bgImage}")
             `;
             document.body.style.backgroundSize = 'cover';
-            document.body.style.backgroundPosition = 'center';
+            document.body.style.backgroundPosition = 'center top';
             document.body.style.backgroundAttachment = 'fixed';
         } else {
             document.body.style.backgroundImage = '';
