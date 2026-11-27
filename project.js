@@ -46,6 +46,23 @@ async function loadProjectDetail() {
         }
 
         document.title = `${project.title} | Deep Dive`;
+
+        if (project.id === 'ultra') {
+            const bgImage = encodeURI('assets/enigma backgorund image.webp');
+            document.body.style.backgroundImage = `
+                linear-gradient(rgba(10, 15, 28, 0.85), rgba(10, 15, 28, 0.92)),
+                url("${bgImage}")
+            `;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+            document.body.style.backgroundAttachment = 'fixed';
+        } else {
+            document.body.style.backgroundImage = '';
+            document.body.style.backgroundSize = '';
+            document.body.style.backgroundPosition = '';
+            document.body.style.backgroundAttachment = '';
+        }
+
         const dd = project.deepDive || {};
         const arch = project.architecture || {};
 
@@ -125,7 +142,7 @@ async function loadProjectDetail() {
 
                 <div class="terminal-capture">
                     <span class="stage-label">Live Terminal Execution</span>
-                    <img src="${run.screenshotPath}" alt="${run.heading}"
+                    <img src="${encodeURI(run.screenshotPath)}" alt="${run.heading}"
                          onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                     <div class="missing-img-note" style="display:none;">
                         Save your terminal screenshot as <code>${run.screenshotPath}</code> to display it here.
@@ -178,7 +195,7 @@ async function loadProjectDetail() {
                     ${diagramPath ? `
                         <div class="strategy-box diagram-placeholder" style="margin-top: 20px;">
                             <strong>${diagramCaption}</strong>
-                            <img src="${diagramPath}" alt="${diagramCaption}"
+                            <img src="${encodeURI(diagramPath)}" alt="${diagramCaption}"
                                  onerror="this.style.display='none'; this.nextElementSibling.style.display='block';">
                             <p style="display:none; color:#38bdf8; margin-top:8px;">
                                 [Diagram missing: verify <code>${diagramPath}</code>]
@@ -220,7 +237,7 @@ async function loadProjectDetail() {
         `;
     } catch (err) {
         container.innerHTML = `<p>Error loading project details.</p>`;
-        console.error(err);
+        console.error('loadProjectDetail failed:', err);
     }
 }
 
