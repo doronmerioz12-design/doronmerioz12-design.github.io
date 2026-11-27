@@ -1,5 +1,6 @@
 [
   {
+    "id": "projectdnd",
     "title": "ProjectDnD — RPG Engine & AI Storyteller API",
     "year": "2026",
     "displayType": "ARCHITECTURE_DIAGRAM",
@@ -12,6 +13,7 @@
     }
   },
   {
+    "id": "ultra",
     "title": "Ultra — Bletchley Park Intelligence Simulation",
     "year": "2025",
     "displayType": "ARCHITECTURE_DIAGRAM",
@@ -23,23 +25,106 @@
       "caption": "Cipher Decryption Pipeline & Role-Based Access Control (RBAC) Isolated Routing Tables"
     },
     "deepDive": {
-      "intuitiveOverview": "Inspired by the Allied intelligence operations at Bletchley Park during World War II, ULTRA simulates the full lifecycle of an intercepted enemy radio transmission. Raw encrypted signals enter a persistent queue, get cracked automatically without pre-shared keys using classical cryptanalysis, are analyzed by an AI triage engine to determine urgency and target command, and are dispatched strictly on a 'Need-to-Know' basis to isolated military branch databases.",
-      "executionProof": {
-        "title": "Verified End-to-End Pipeline & Test Suite Execution",
-        "caption": "Live execution demonstrating automated cipher cracking, AI branch classification, isolated PostgreSQL routing, and 9/9 passing JUnit 5 & Mockito unit/integration tests.",
-        "imagePath": "assets/ultra-run.png"
-      },
-      "problem": "How to ingest untrusted, encrypted radio traffic, break ciphers blindly at runtime, classify unstructured intelligence using an external LLM prone to rate limits, and enforce strict compartmented access so no military branch can query another branch's records.",
-      "architecture": [
-        "Keyless Cryptanalysis Engine (Strategy & Factory): Dynamically resolves Caesar and blind Vigenere crackers (powered by Kasiski Examination and frequency analysis) with fail-fast Enum validation.",
-        "Fault-Tolerant AI Triage (Gemini 2.5 Flash): Parses structured routing (NAVY, RAF, ARMY, PM_OFFICE, SHAEF) and urgency levels via Java HttpClient, featuring exponential backoff on HTTP 429 and safe fallback (ALL | ROUTINE).",
-        "Defense-in-Depth Isolation (Observer + PostgreSQL RBAC): Decouples alert distribution via Observer pattern backed by 6 distinct PostgreSQL roles with least-privilege table grants.",
-        "Isolated Testing Suite (JUnit 5 & Mockito): 9 deterministic tests validating cryptanalysis accuracy, fail-fast factory edge cases, and mocked LLM Need-to-Know routing without external DB/API dependencies."
+      "overview": "Inspired by the Allied cryptanalysis headquarters at Bletchley Park during World War II, ULTRA is an end-to-end backend intelligence pipeline that simulates the lifecycle of an intercepted enemy radio transmission. Raw encrypted traffic enters a persistent queue, is cracked automatically without pre-shared keys, is evaluated semantically by an AI triage officer to determine urgency and target command, and is routed strictly on a 'Need-to-Know' basis into compartmented branch databases.",
+      "architectureSummary": "The system follows a decoupled pipeline architecture combining classical OOP design patterns with database-level Role-Based Access Control (RBAC).",
+      "pipelineStages": [
+        {
+          "title": "Signal Ingestion Queue",
+          "desc": "Radio stations push intercepted encrypted payloads and frequency metadata into a PostgreSQL INPUT table."
+        },
+        {
+          "title": "Factory & Strategy Decryption",
+          "desc": "CipherType validates the cipher fail-fast and CipherFactory instantiates the matching keyless cryptanalysis strategy."
+        },
+        {
+          "title": "Gemini AI Semantic Triage",
+          "desc": "Decrypted plaintext is analyzed by Gemini 2.5 Flash to extract target branch (NAVY, RAF, ARMY, PM_OFFICE, SHAEF) and urgency level."
+        },
+        {
+          "title": "Observer & RBAC Dispatch",
+          "desc": "Branch observers persist alerts exclusively to their isolated PostgreSQL tables using least-privilege database roles."
+        }
       ],
-      "takeaways": "Separating statistical cryptanalysis, external AI network calls, and database RBAC enforcement behind clean interfaces made the system resilient to API failures and straightforward to verify with mocked unit tests."
+      "components": [
+        {
+          "name": "CipherFactory & CipherType",
+          "role": "Creational Pattern & Input Validation",
+          "details": "Normalizes cipher identifiers into a strongly typed Enum with fail-fast validation and dynamically instantiates the matching DecryptionStrategy."
+        },
+        {
+          "name": "Cryptanalysis Engine (decrypt)",
+          "role": "Keyless Signal Breaking",
+          "details": "Implements the Strategy pattern across CeaserDecrypt and VigenereCracker so cipher algorithms remain modular and interchangeable."
+        },
+        {
+          "name": "GeminiIntelligenceClassifier",
+          "role": "LLM Semantic Triage",
+          "details": "Calls Google Gemini via Java's native HttpClient, parses structured 'BRANCH|URGENCY' results, and falls back safely when needed."
+        },
+        {
+          "name": "BranchObserver & PostgreSQL RBAC",
+          "role": "Need-to-Know Enforcement",
+          "details": "Distributes intelligence via the Observer pattern backed by 6 distinct PostgreSQL roles with granular table permissions."
+        },
+        {
+          "name": "UltraPipelineTest Suite",
+          "role": "Automated Quality Assurance",
+          "details": "9 JUnit 5 & Mockito tests verifying cryptanalysis accuracy, fail-fast factory edge cases, and mocked AI routing."
+        }
+      ],
+      "aiIntegration": {
+        "overview": "ULTRA uses Google Gemini 2.5 Flash to interpret operational military context (such as naval convoy reports vs. air/ground intelligence) and classify urgency.",
+        "highlights": [
+          "Structured Output Parsing: Constrains Gemini to return a clean 'BRANCH|URGENCY' format parsed via ClassificationResult.parse().",
+          "Rate-Limit & Retry Handling: Handles HTTP 429 rate limits with exponential backoff.",
+          "Zero-Data-Loss Fallback: Falls back deterministically to 'ALL|ROUTINE' if the API key is missing, throttled, or malformed so no intercepted message is lost."
+        ]
+      },
+      "algorithms": [
+        {
+          "name": "Caesar Cipher — Chi-Squared Frequency Cryptanalysis",
+          "complexity": "O(N) Time • 26 Shift Hypotheses",
+          "explanation": "Cracks monoalphabetic shift ciphers blindly without knowing the shift offset by evaluating all 26 rotations against English letter frequencies.",
+          "steps": [
+            "Generates all 26 candidate plaintext rotations (shifts 0–25).",
+            "Computes letter frequency distributions for each candidate.",
+            "Scores candidates using Chi-Squared against standard English letter frequencies.",
+            "Selects the shift with the lowest divergence while preserving original casing and punctuation."
+          ]
+        },
+        {
+          "name": "Vigenère Cipher — Kasiski Examination & Coset Analysis",
+          "complexity": "Two-Phase Statistical Attack",
+          "explanation": "Cracks polyalphabetic Vigenère ciphers without prior knowledge of the keyword length or letters.",
+          "steps": [
+            "Kasiski Examination: Finds repeated 3-letter trigrams, measures distances between occurrences, and votes on candidate key lengths (2–10) that divide those distances.",
+            "Per-Column Frequency Analysis: Splits ciphertext into K interleaved Caesar streams based on the winning key length K.",
+            "Recovers each key character by mapping the most frequent letter in each column to 'E'."
+          ]
+        }
+      ],
+      "terminalRuns": [
+        {
+          "heading": "Pipeline Run on Caesar Cipher Intercept",
+          "plaintext": "PRIME MINISTER OFFICE",
+          "cipherType": "CAESAR CIPHER",
+          "cipherParam": "Shift: +3",
+          "ciphertext": "SULPH PLQLVWHU RIILFH",
+          "screenshotPath": "assets/ultra-caesar-run.png"
+        },
+        {
+          "heading": "Pipeline Run on Blind Vigenère Cipher Intercept",
+          "plaintext": "THE ENEMY FLEET ENTERED THE WESTERN SECTOR NEAR THE REEF AND THE RESERVE FLEET REMAINED AT SEA",
+          "cipherType": "VIGENÈRE CIPHER",
+          "cipherParam": "Keyword: 'KZ' (Key Length: 2)",
+          "ciphertext": "DGD DMDLX EKDDS DMDDSDC SGD VDRSDQM RDBSNQ MDZQ SGD QDDD ZMC SGD QDRDQUC EKDDS QDLZHMDC ZS RDZ",
+          "screenshotPath": "assets/ultra-vigenere-run.png"
+        }
+      ]
     }
   },
   {
+    "id": "sorting-hat",
     "title": "Semantic Universe Classifier (Sorting Hat)",
     "year": "2025",
     "displayType": "PERFORMANCE_GRAPH",
