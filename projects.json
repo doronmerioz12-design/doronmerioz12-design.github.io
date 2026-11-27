@@ -1,143 +1,90 @@
-[
-  {
-    "id": "projectdnd",
-    "title": "ProjectDnD — RPG Engine & AI Storyteller API",
-    "year": "2026",
-    "displayType": "ARCHITECTURE_DIAGRAM",
-    "description": "Architected a secured, production-ready RESTful backend in Spring Boot 3 for a fantasy RPG engine featuring D20 mechanics, spellcasting, rune channeling, and dynamic state management.",
-    "tech": ["Java", "Spring Boot 3", "Spring Security (JWT)", "Spring Data JPA", "PostgreSQL", "Gemini AI"],
-    "githubUrl": "https://github.com/doronmerioz12-design/projectdnd",
-    "payload": {
-      "imagePath": "assets/projectdnd-arch.png",
-      "caption": "Layered Spring Boot 3 Architecture: JWT Auth Filter -> REST Controllers -> Factory Rune Engine -> PostgreSQL"
-    }
-  },
-  {
-    "id": "ultra",
-    "title": "Ultra — Bletchley Park Intelligence Simulation",
-    "year": "2025",
-    "displayType": "ARCHITECTURE_DIAGRAM",
-    "description": "End-to-end WWII intelligence pipeline decrypting intercepted signals without pre-shared keys and integrating Google Gemini AI for semantic classification. Built with Strategy, Observer, and Factory patterns plus PostgreSQL RBAC isolation.",
-    "tech": ["Java 17", "PostgreSQL (RBAC)", "Gemini 2.5 Flash", "JUnit 5 & Mockito", "Strategy & Observer"],
-    "githubUrl": "https://github.com/doronmerioz12-design/Ultra",
-    "payload": {
-      "imagePath": "assets/ultra-arch.png",
-      "caption": "Cipher Decryption Pipeline & Role-Based Access Control (RBAC) Isolated Routing Tables"
-    },
-    "deepDive": {
-      "overview": "Inspired by the Allied cryptanalysis headquarters at Bletchley Park during World War II, ULTRA is an end-to-end backend intelligence pipeline that simulates the lifecycle of an intercepted enemy radio transmission. Raw encrypted traffic enters a persistent queue, is cracked automatically without pre-shared keys, is evaluated semantically by an AI triage officer to determine urgency and target command, and is routed strictly on a 'Need-to-Know' basis into compartmented branch databases.",
-      "architectureSummary": "The system follows a decoupled pipeline architecture combining classical OOP design patterns with database-level Role-Based Access Control (RBAC).",
-      "pipelineStages": [
-        {
-          "title": "Signal Ingestion Queue",
-          "desc": "Radio stations push intercepted encrypted payloads and frequency metadata into a PostgreSQL INPUT table."
-        },
-        {
-          "title": "Factory & Strategy Decryption",
-          "desc": "CipherType validates the cipher fail-fast and CipherFactory instantiates the matching keyless cryptanalysis strategy."
-        },
-        {
-          "title": "Gemini AI Semantic Triage",
-          "desc": "Decrypted plaintext is analyzed by Gemini 2.5 Flash to extract target branch (NAVY, RAF, ARMY, PM_OFFICE, SHAEF) and urgency level."
-        },
-        {
-          "title": "Observer & RBAC Dispatch",
-          "desc": "Branch observers persist alerts exclusively to their isolated PostgreSQL tables using least-privilege database roles."
-        }
+{
+  "projects": [
+    {
+      "id": "ultra",
+      "title": "ULTRA — Bletchley Park Intelligence Pipeline",
+      "subtitle": "Modular Java & PostgreSQL Cryptanalysis, Gemini Classification & Observer Routing Engine",
+      "category": "Backend & Systems Architecture",
+      "status": "Completed",
+      "highlights": [
+        "Decoupled interception, strategy-based cryptanalysis, AI triage, and need-to-know branch dispatch",
+        "Automated blind Vigenère cryptanalysis via Kasiski examination and frequency analysis",
+        "Resilient AI classification with retry/backoff and safe ALL | ROUTINE fallback on timeout or failure",
+        "Transactional state transitions in PostgreSQL (PENDING -> IN_PROGRESS -> DONE / FAILED)"
       ],
-      "components": [
-        {
-          "name": "CipherFactory & CipherType",
-          "role": "Creational Pattern & Input Validation",
-          "details": "Normalizes cipher identifiers into a strongly typed Enum with fail-fast validation and dynamically instantiates the matching DecryptionStrategy."
-        },
-        {
-          "name": "Cryptanalysis Engine (decrypt)",
-          "role": "Keyless Signal Breaking",
-          "details": "Implements the Strategy pattern across CeaserDecrypt and VigenereCracker so cipher algorithms remain modular and interchangeable."
-        },
-        {
-          "name": "GeminiIntelligenceClassifier",
-          "role": "LLM Semantic Triage",
-          "details": "Calls Google Gemini via Java's native HttpClient, parses structured 'BRANCH|URGENCY' results, and falls back safely when needed."
-        },
-        {
-          "name": "BranchObserver & PostgreSQL RBAC",
-          "role": "Need-to-Know Enforcement",
-          "details": "Distributes intelligence via the Observer pattern backed by 6 distinct PostgreSQL roles with granular table permissions."
-        },
-        {
-          "name": "UltraPipelineTest Suite",
-          "role": "Automated Quality Assurance",
-          "details": "9 JUnit 5 & Mockito tests verifying cryptanalysis accuracy, fail-fast factory edge cases, and mocked AI routing."
-        }
+      "techStack": [
+        "Java 21",
+        "PostgreSQL",
+        "JDBC",
+        "Google Gemini API",
+        "Jackson",
+        "JUnit 5",
+        "Mockito",
+        "Maven"
       ],
-      "aiIntegration": {
-        "overview": "ULTRA uses Google Gemini 2.5 Flash to interpret operational military context (such as naval convoy reports vs. air/ground intelligence) and classify urgency.",
-        "highlights": [
-          "Structured Output Parsing: Constrains Gemini to return a clean 'BRANCH|URGENCY' format parsed via ClassificationResult.parse().",
-          "Rate-Limit & Retry Handling: Handles HTTP 429 rate limits with exponential backoff.",
-          "Zero-Data-Loss Fallback: Falls back deterministically to 'ALL|ROUTINE' if the API key is missing, throttled, or malformed so no intercepted message is lost."
+      "architecture": {
+        "diagramPath": "assets/ULTRA diagrm.webp",
+        "components": [
+          {
+            "name": "Ultra.Main & Ultra",
+            "role": "Entry point and pipeline orchestrator coordinating queue polling, decryption, classification, and observer dispatch"
+          },
+          {
+            "name": "RadioStationSimulator & Repository",
+            "role": "Simulates intercepted radio transmissions, validates cipher types, and manages message states in the PostgreSQL INPUT table"
+          },
+          {
+            "name": "CipherFactory & CipherType",
+            "role": "Fail-fast enum validation and Factory resolution for concrete DecryptionStrategy implementations"
+          },
+          {
+            "name": "CaesarDecrypt & VigenereCracker",
+            "role": "Statistical cryptanalysis strategies (26-shift chi-squared scoring for Caesar; Kasiski key-length estimation + coset frequency analysis for Vigenère)"
+          },
+          {
+            "name": "MessageClassifier & LlmMessageClassifier",
+            "role": "Semantic triage via Gemini REST API returning Branch and Urgency, with HTTP/1.1 timeouts, 429 retry backoff, and safe fallback"
+          },
+          {
+            "name": "Observer & AbstractBranchObserver",
+            "role": "Pub/Sub need-to-know routing across Navy, RAF, Army, PM_OFFICE, and SHAEF headquarters"
+          }
         ]
       },
-      "algorithms": [
-        {
-          "name": "Caesar Cipher — Chi-Squared Frequency Cryptanalysis",
-          "complexity": "O(N) Time • 26 Shift Hypotheses",
-          "explanation": "Cracks monoalphabetic shift ciphers blindly without knowing the shift offset by evaluating all 26 rotations against English letter frequencies.",
-          "steps": [
-            "Generates all 26 candidate plaintext rotations (shifts 0–25).",
-            "Computes letter frequency distributions for each candidate.",
-            "Scores candidates using Chi-Squared against standard English letter frequencies.",
-            "Selects the shift with the lowest divergence while preserving original casing and punctuation."
-          ]
-        },
-        {
-          "name": "Vigenère Cipher — Kasiski Examination & Coset Analysis",
-          "complexity": "Two-Phase Statistical Attack",
-          "explanation": "Cracks polyalphabetic Vigenère ciphers without prior knowledge of the keyword length or letters.",
-          "steps": [
-            "Kasiski Examination: Finds repeated 3-letter trigrams, measures distances between occurrences, and votes on candidate key lengths (2–10) that divide those distances.",
-            "Per-Column Frequency Analysis: Splits ciphertext into K interleaved Caesar streams based on the winning key length K.",
-            "Recovers each key character by mapping the most frequent letter in each column to 'E'."
-          ]
-        }
-      ],
-      "terminalRuns": [
-        {
-          "heading": "Pipeline Run on Caesar Cipher Intercept",
-          "plaintext": "PRIME MINISTER OFFICE",
-          "cipherType": "CAESAR CIPHER",
-          "cipherParam": "Shift: +3",
-          "ciphertext": "SULPH PLQLVWHU RIILFH",
-          "screenshotPath": "assets/ultra-caesar-run.png"
-        },
-        {
-          "heading": "Pipeline Run on Blind Vigenère Cipher Intercept",
-          "plaintext": "THE ENEMY FLEET ENTERED THE WESTERN SECTOR NEAR THE REEF AND THE RESERVE FLEET REMAINED AT SEA",
-          "cipherType": "VIGENÈRE CIPHER",
-          "cipherParam": "Keyword: 'KZ' (Key Length: 2)",
-          "ciphertext": "DGD DMDLX EKDDS DMDDSDC SGD VDRSDQM RDBSNQ MDZQ SGD QDDD ZMC SGD QDRDQUC EKDDS QDLZHMDC ZS RDZ",
-          "screenshotPath": "assets/ultra-vigenere-run.png"
-        }
-      ]
+      "deepDive": {
+        "terminalRuns": [
+          {
+            "runNumber": 1,
+            "heading": "Pipeline Run on Caesar Cipher Intercept (Naval Intelligence)",
+            "plaintext": "SUBMARINE 553 SPOTTED NEAR THE COAST OF SICILY",
+            "cipherType": "CAESAR CIPHER",
+            "cipherParam": "Shift: 3 (Chi-Squared Statistical Cryptanalysis)",
+            "ciphertext": "VXEPDULQH 553 VSRWWHG QHDU WKH FRDVW RI VLFLOB",
+            "routingResult": "NAVY | HIGH",
+            "screenshotPath": "assets/navy massege.png"
+          },
+          {
+            "runNumber": 2,
+            "heading": "Pipeline Run on Blind Vigenère Cipher Intercept (Air Reconnaissance)",
+            "plaintext": "LUFTWAFFE CONDOR SQUADRON SPOTTED NEAR NORMANDY COAST AND RECONNAISSANCE PATROLS REPORTED MOVEMENTS",
+            "cipherType": "VIGENÈRE CIPHER",
+            "cipherParam": "Keyword: 'KZ' (Key Length: 2 — Kasiski + Frequency Analysis)",
+            "ciphertext": "VTTUAGPPD MNNYOB CQAEZBYX CPYDDED YPOB XYBWYNY JMYNDC NYX BOEMMYXMYCYN ZKDYBNFC WYFOWYWDXDC",
+            "routingResult": "RAF | CRITICAL",
+            "screenshotPath": "assets/run2.png"
+          },
+          {
+            "runNumber": 3,
+            "heading": "Pipeline Run Under AI Timeout Resilience (Graceful Fallback)",
+            "plaintext": "LUFTWAFFE CONDOR SQUADRON SPOTTED NEAR NORMANDY COAST AND RECONNAISSANCE PATROLS REPORTED MOVEMENTS",
+            "cipherType": "VIGENÈRE CIPHER",
+            "cipherParam": "Fallback on Gemini REST timeout -> ALL | ROUTINE broadcast",
+            "ciphertext": "VTTUAGPPD MNNYOB CQAEZBYX CPYDDED YPOB XYBWYNY JMYNDC NYX BOEMMYXMYCYN ZKDYBNFC WYFOWYWDXDC",
+            "routingResult": "ALL | ROUTINE",
+            "screenshotPath": "assets/run3.png"
+          }
+        ]
+      }
     }
-  },
-  {
-    "id": "sorting-hat",
-    "title": "Semantic Universe Classifier (Sorting Hat)",
-    "year": "2025",
-    "displayType": "PERFORMANCE_GRAPH",
-    "description": "Full-stack AI application categorizing historical figures into fictional universes via a high-performance FastAPI backend, using Sentence-Transformers and Gemini AI with local embedding fallbacks and caching.",
-    "tech": ["Python", "FastAPI", "Gemini AI", "Sentence-Transformers", "MongoDB"],
-    "githubUrl": "https://github.com/doronmerioz12-design/Sorting-Hat",
-    "payload": {
-      "metricTitle": "API Latency Optimization (Caching & Local Fallback)",
-      "bars": [
-        { "label": "Cold LLM Request (Uncached)", "valueText": "1,450 ms", "percent": 100 },
-        { "label": "Local Embedding Fallback", "valueText": "180 ms", "percent": 18 },
-        { "label": "Cached Semantic Lookup", "valueText": "25 ms", "percent": 4 }
-      ]
-    }
-  }
-]
+  ]
+}
