@@ -70,19 +70,28 @@ function getProjectDeepDiveUrl(project) {
     return `project.html?${query}`;
 }
 
-
 // טעינת הפרויקטים
 async function loadProjects() {
     const container = document.getElementById('projects-container');
     if (!container) return;
 
     try {
-        const response = await fetch('projects.json?v=' + new Date().getTime());
+        const url = 'projects.json?v=' + new Date().getTime();
+        console.log('Fetching projects from:', url);
+
+        const response = await fetch(url);
+        console.log('Response status:', response.status, 'url:', response.url);
+
         if (!response.ok) {
             throw new Error(`HTTP error ${response.status}`);
         }
 
-        const rawData = await response.json();
+        const rawText = await response.text();
+        console.log('Raw response text:', rawText);
+
+        const rawData = JSON.parse(rawText);
+        console.log('Parsed rawData:', rawData, 'isArray:', Array.isArray(rawData));
+
         const projectsArray = Array.isArray(rawData)
             ? rawData
             : Array.isArray(rawData?.projects)
@@ -90,8 +99,9 @@ async function loadProjects() {
                 : [];
 
         loadedProjects = projectsArray;
+        console.log('loadedProjects:', loadedProjects, 'isArray:', Array.isArray(loadedProjects));
 
-        if (!loadedProjects.length) {
+        if (!Array.isArray(loadedProjects) || loadedProjects.length === 0) {
             container.innerHTML = `<p>No projects found.</p>`;
             return;
         }
@@ -144,7 +154,7 @@ async function loadProjects() {
         }).join('');
     } catch (error) {
         container.innerHTML = `<p>Failed to load projects data.</p>`;
-        console.error(error);
+        console.error('loadProjects failed:', error);
     }
 }
 
