@@ -52,18 +52,17 @@ async function loadProjectDetail() {
 
         if (isUltra) {
             const bgImage = encodeURI('assets/enigma backgorund image.webp');
-            document.body.style.backgroundImage = `
-                linear-gradient(rgba(10, 15, 28, 0.52), rgba(10, 15, 28, 0.68)),
-                url("${bgImage}")
-            `;
+            document.body.style.backgroundImage = `url("${bgImage}")`;
             document.body.style.backgroundSize = 'cover';
             document.body.style.backgroundPosition = 'center top';
             document.body.style.backgroundAttachment = 'fixed';
+            document.body.style.backgroundColor = '#0a0f1c';
         } else {
             document.body.style.backgroundImage = '';
             document.body.style.backgroundSize = '';
             document.body.style.backgroundPosition = '';
             document.body.style.backgroundAttachment = '';
+            document.body.style.backgroundColor = '';
         }
 
         const dd = project.deepDive || {};
