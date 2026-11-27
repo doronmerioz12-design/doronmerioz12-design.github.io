@@ -70,35 +70,74 @@ function getProjectDeepDiveUrl(project) {
     return `project.html?${query}`;
 }
 
+
 // טעינת הפרויקטים
 async function loadProjects() {
     const container = document.getElementById('projects-container');
+    if (!container) return;
+
     try {
         const response = await fetch('projects.json?v=' + new Date().getTime());
-        loadedProjects = await response.json();
+        if (!response.ok) {
+            throw new Error(`HTTP error ${response.status}`);
+        }
+
+        const rawData = await response.json();
+        const projectsArray = Array.isArray(rawData)
+            ? rawData
+            : Array.isArray(rawData?.projects)
+                ? rawData.projects
+                : [];
+
+        loadedProjects = projectsArray;
+
+        if (!loadedProjects.length) {
+            container.innerHTML = `<p>No projects found.</p>`;
+            return;
+        }
 
         container.innerHTML = loadedProjects.map((project) => {
-            const strategy = strategyRegistry[project.displayType] || new TextHighlightsStrategy();
-            const dynamicContent = strategy.render(project.payload);
-            const techBadges = project.tech.map(t => `<span class="tech-tag">${t}</span>`).join('');
+            const displayType = project.displayType || 'TEXT_HIGHLIGHTS';
+            const strategy = strategyRegistry[displayType] || new TextHighlightsStrategy();
+
+            const payload = project.payload || {
+                caption: project.subtitle || project.title,
+                imagePath: project.architecture?.diagramPath || '',
+                highlights: project.highlights || []
+            };
+
+            const dynamicContent = strategy.render(payload);
+            const techList = Array.isArray(project.tech)
+                ? project.tech
+                : Array.isArray(project.techStack)
+                    ? project.techStack
+                    : [];
+            const techBadges = techList.map(t => `<span class="tech-tag">${t}</span>`).join('');
             const deepDiveUrl = getProjectDeepDiveUrl(project);
+            const badgeText = project.year
+                ? `${project.year} • ${displayType}`
+                : (project.status || displayType);
+            const description = project.description || project.subtitle || '';
+            const githubButton = project.githubUrl
+                ? `<a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
+                       GitHub Repository ↗
+                   </a>`
+                : '';
 
             return `
                 <article class="project-card">
                     <div class="project-header">
                         <h3>${project.title}</h3>
-                        <span class="badge">${project.year} • ${project.displayType}</span>
+                        <span class="badge">${badgeText}</span>
                     </div>
-                    <p>${project.description}</p>
+                    <p>${description}</p>
                     <div class="tech-tags">${techBadges}</div>
                     ${dynamicContent}
                     <div class="card-actions">
                         <a href="${deepDiveUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-sm">
                             Project Deep Dive & Architecture ↗
                         </a>
-                        <a href="${project.githubUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm">
-                            GitHub Repository ↗
-                        </a>
+                        ${githubButton}
                     </div>
                 </article>
             `;
